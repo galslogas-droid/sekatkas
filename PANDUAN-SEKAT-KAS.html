@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panduan Pengguna Sekat Kas Kopontren</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#059669;--primary-dark:#047857;--primary-light:#ECFDF5;
+  --bg:#FFFFFF;--bg-soft:#F9FAFB;--card:#FFFFFF;
+  --text:#1F2937;--text-muted:#6B7280;--border:#E5E7EB;
+  --code-bg:#F3F4F6;--code-text:#111827;
+  --warn-bg:#FEF3C7;--warn-border:#F59E0B;--warn-text:#92400E;
+  --ok-bg:#D1FAE5;--ok-border:#059669;--ok-text:#065F46;
+  --danger-bg:#FEE2E2;--danger-border:#EF4444;--danger-text:#991B1B;
+  --shadow:0 1px 4px rgba(15,23,42,.08)
+}
+[data-theme=dark]{
+  --primary:#10B981;--primary-dark:#059669;--primary-light:#064E3B;
+  --bg:#0F172A;--bg-soft:#1E293B;--card:#1E293B;
+  --text:#F1F5F9;--text-muted:#94A3B8;--border:#334155;
+  --code-bg:#0F172A;--code-text:#F1F5F9;
+  --warn-bg:#451A03;--warn-border:#F59E0B;--warn-text:#FDE68A;
+  --ok-bg:#064E3B;--ok-border:#10B981;--ok-text:#A7F3D0;
+  --danger-bg:#450A0A;--danger-border:#EF4444;--danger-text:#FECACA;
+  --shadow:0 1px 4px rgba(0,0,0,.45)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:16px}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+.topbar{position:sticky;top:0;z-index:60;background:linear-gradient(135deg,#047857 0%,#059669 100%);color:#fff;box-shadow:var(--shadow)}
+.topbar-inner{display:flex;align-items:center;gap:10px;padding:12px 14px;max-width:1200px;margin:0 auto}
+.topbar h1{font-size:1.05rem;font-weight:800;line-height:1.25}
+.topbar .sub{font-size:.78rem;opacity:.92;font-weight:500}
+.topbar .titles{flex:1;min-width:0}
+.icon-btn{background:rgba(255,255,255,.15);border:none;color:#fff;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.icon-btn:hover{background:rgba(255,255,255,.28)}
+.theme-btn{background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:10px;padding:8px 12px;font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;flex:none}
+.theme-btn:hover{background:rgba(255,255,255,.28)}
+.theme-btn .lbl{display:none}
+@media(min-width:768px){.theme-btn .lbl{display:inline}}
+.progress{background:var(--card);border-bottom:1px solid var(--border);padding:8px 14px}
+.progress-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.progress-track{flex:1;height:8px;background:var(--bg-soft);border:1px solid var(--border);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:var(--primary);transition:width .3s}
+.progress-txt{font-size:.72rem;font-weight:700;color:var(--text-muted);white-space:nowrap}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:45;opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.show{opacity:1;pointer-events:auto}
+.toc{position:fixed;top:0;left:0;width:300px;max-width:85vw;height:100%;background:var(--card);border-right:1px solid var(--border);z-index:50;padding:18px;overflow-y:auto;transform:translateX(-102%);transition:transform .28s ease}
+.toc.open{transform:translateX(0)}
+.toc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.toc-title{font-size:.8rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--text-muted)}
+.toc-close{background:none;border:none;color:var(--text-muted);cursor:pointer;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.toc-close:hover{background:var(--bg-soft)}
+.toc ol{list-style:none}
+.toc li{margin:2px 0}
+.toc li a{display:flex;gap:8px;align-items:baseline;padding:8px 10px;border-radius:10px;font-size:.86rem;font-weight:600;color:var(--text);border-left:3px solid transparent}
+.toc li a:hover{background:var(--bg-soft);text-decoration:none}
+.toc li a .no{font-size:.7rem;font-weight:800;color:var(--primary-dark);background:var(--primary-light);border-radius:6px;padding:1px 7px;min-width:26px;text-align:center;flex:none}
+.toc li a.active{background:var(--primary-light);border-left-color:var(--primary);color:var(--primary-dark)}
+main{padding:24px 16px 90px}
+.content{max-width:760px;margin:0 auto}
+.chapter{margin:34px 0;scroll-margin-top:80px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:var(--shadow);margin:14px 0}
+.summary{background:var(--primary-light);border-left:4px solid var(--primary);border-radius:12px;padding:14px 16px;font-weight:600;margin:14px 0}
+h2.bab{font-size:1.3rem;font-weight:800;color:var(--primary-dark);border-bottom:2px solid var(--primary);padding-bottom:8px;margin:0 0 6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+h2.bab .no{font-size:.8rem;background:var(--primary);color:#fff;border-radius:8px;padding:3px 10px;font-weight:800;flex:none}
+h3{font-size:1.05rem;font-weight:700;margin:18px 0 8px}
+p{margin:8px 0}
+ol.steps,ul.steps{margin:10px 0;padding-left:22px}
+ol.steps li,ul.steps li{margin:7px 0}
+pre.code{background:var(--code-bg);color:var(--code-text);font-family:Consolas,'SFMono-Regular',Menlo,monospace;font-size:.82rem;line-height:1.6;border:1px solid var(--border);border-radius:10px;padding:14px;overflow-x:auto;white-space:pre-wrap;margin:12px 0}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem;min-width:420px}
+th,td{border:1px solid var(--border);padding:9px 11px;text-align:left;vertical-align:top}
+th{background:var(--primary-light);color:var(--primary-dark);font-weight:700}
+tbody tr:nth-child(even){background:var(--bg-soft)}
+.checklist{list-style:none;margin:14px 0;padding:14px;background:var(--ok-bg);border:1px solid var(--ok-border);border-radius:12px}
+.checklist .cl-title{font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--ok-text);margin-bottom:8px}
+.checklist li{margin:7px 0}
+.checklist label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-weight:600}
+.checklist input{width:19px;height:19px;accent-color:var(--primary);margin-top:2px;flex:none}
+.checklist li.done label span{opacity:.55}
+.macet{background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:12px;padding:12px 14px;margin:12px 0}
+.m-title{font-weight:800;color:var(--warn-text);margin-bottom:6px}
+.macet ul{margin:6px 0 0 18px}
+.tip{background:var(--primary-light);border-left:4px solid var(--primary);border-radius:10px;padding:12px 14px;margin:12px 0;font-size:.92rem}
+.danger{background:var(--danger-bg);border-left:4px solid var(--danger-border);border-radius:10px;padding:12px 14px;margin:12px 0;font-weight:600;font-size:.92rem;color:var(--danger-text)}
+footer{border-top:2px solid var(--primary);margin-top:40px;padding:26px 16px;background:var(--bg-soft);text-align:center;font-size:.9rem}
+footer p{margin:4px 0}
+.cetak-btn{background:var(--primary);color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;margin:12px 0;font-family:inherit}
+.cetak-btn:hover{background:var(--primary-dark)}
+#toTop{position:fixed;bottom:20px;right:20px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:all .2s;z-index:40}
+#toTop.show{opacity:1;pointer-events:auto}
+@media print{
+  .topbar,.progress,.overlay,.toc,#toTop,.cetak-btn{display:none!important}
+  body{background:#fff;color:#000;font-size:12pt}
+  .card,.summary,.tip,.macet,.checklist{border:1px solid #ccc;box-shadow:none;page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <button class="icon-btn" id="menuBtn" aria-label="Buka daftar isi">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="titles">
+      <h1>Sekat Kas Kopontren</h1>
+      <div class="sub">Pemisah Dana · Penjaga Amanah Kopontren Al Ittihad</div>
+    </div>
+    <button class="theme-btn" id="themeBtn" aria-label="Ganti tema warna">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span class="lbl" id="themeLbl">Mode Gelap</span>
+    </button>
+  </div>
+</header>
+
+<div class="progress">
+  <div class="progress-inner">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-txt" id="progressText">0% Selesai</div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="toc" id="toc" aria-label="Daftar isi panduan">
+  <div class="toc-head">
+    <div class="toc-title">Daftar Isi</div>
+    <button class="toc-close" id="tocClose" aria-label="Tutup daftar isi">✕</button>
+  </div>
+  <ol>
+    <li><a href="#bab1"><span class="no">1</span><span>Latar Belakang &amp; Filosofi</span></a></li>
+    <li><a href="#bab2"><span class="no">2</span><span>Alur 3 Tingkat Status Dana</span></a></li>
+    <li><a href="#bab3"><span class="no">3</span><span>Pencatatan Masuk &amp; Keluar</span></a></li>
+    <li><a href="#bab4"><span class="no">4</span><span>Rekonsiliasi Bank Otomatis</span></a></li>
+    <li><a href="#bab5"><span class="no">5</span><span>Setor Massal &amp; Berita Acara</span></a></li>
+    <li><a href="#bab6"><span class="no">6</span><span>Laporan &amp; WhatsApp Plain ASCII</span></a></li>
+    <li><a href="#bab7"><span class="no">7</span><span>Sinkronisasi Google Sheets</span></a></li>
+    <li><a href="#bab8"><span class="no">8</span><span>Migrasi ke Rekening Resmi</span></a></li>
+  </ol>
+</aside>
+
+<main>
+  <div class="content">
+
+    <!-- BAB 1 -->
+    <section class="chapter" id="bab1">
+      <h2 class="bab"><span class="no">Bab 1</span>Latar Belakang &amp; Filosofi "Sekat Kas"</h2>
+      <div class="summary">
+        Aplikasi ini berfungsi sebagai <strong>Sekat Pemisah</strong> antara uang pribadi Anda dengan dana usaha pertokoan Kopontren Al Ittihad yang ditampung sementara di rekening bank pribadi pengembang.
+      </div>
+      <p>Kopontren (Koperasi Pondok Pesantren) Al Ittihad belum memiliki rekening bank kelembagaan resmi. Akibatnya, seluruh transaksi non-tunai (transfer dari pembeli madu, setoran pengurus, pembayaran supplier) masuk ke rekening bank milik developer.</p>
+      
+      <div class="tip">
+        <strong>Tagline: "Pemisah dana. Penjaga amanah."</strong><br>
+        Aplikasi ini mengingatkan secara tegas: uang Kopontren BUKAN milik pribadi. Setiap rupiah memiliki jejak audit transparan dan siap diserahkan sewaktu-waktu.
+      </div>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya paham bahwa aplikasi ini mencatat pergerakan arus kas rekening, bukan POS kasir barang per barang.</span></label></li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu tujuan utama aplikasi ini adalah menjaga amanah dana Kopontren agar tidak tercampur uang pribadi.</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 2 -->
+    <section class="chapter" id="bab2">
+      <h2 class="bab"><span class="no">Bab 2</span>Alur 3 Tingkat Status Dana (Krusial)</h2>
+      <div class="summary">
+        Setiap transaksi memiliki tahapan status berurutan: <strong>Menunggu Transfer (Belum Cair)</strong> → <strong>Siap Disetor (Sudah Cair)</strong> → <strong>Aman di Admin (Sudah Setor)</strong>.
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Warna</th>
+              <th>Arti bagi Pemasukan</th>
+              <th>Arti bagi Pengeluaran</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Belum Cair</strong></td>
+              <td>Kuning (Amber)</td>
+              <td>Pembeli janji transfer / belum masuk mutasi m-Banking</td>
+              <td>Kewajiban belanja yang belum dibayarkan</td>
+            </tr>
+            <tr>
+              <td><strong>Sudah Cair</strong></td>
+              <td>Biru Langit</td>
+              <td>Uang <strong>SUDAH ADA</strong> di rekening pribadi developer (Siap disetor ke Kopontren)</td>
+              <td>Uang sudah ditransfer keluar dari rekening developer</td>
+            </tr>
+            <tr>
+              <td><strong>Sudah Setor</strong></td>
+              <td>Hijau Emerald</td>
+              <td>Uang telah diserahkan secara resmi ke admin Kopontren (tugas selesai)</td>
+              <td>Admin Kopontren telah me-reimburse pengeluaran</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3>Rumus Saldo di Beranda:</h3>
+        <p><strong>Saldo Siap Disetor:</strong> Jumlah dana Kopontren yang saat ini nyata berada di dalam rekening bank Anda. Rumus: <code>(Total Masuk Sudah Cair) − (Total Keluar Sudah Cair)</code>.</p>
+      </div>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya mengerti tombol "Cairkan Dana" ditekan saat mutasi m-banking bank benar-benar sudah masuk.</span></label></li>
+        <li><label><input type="checkbox" class="chk"><span>Saya mengerti tombol "Setorkan ke Admin" ditekan saat dana diserahkan ke pengurus Kopontren.</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 3 -->
+    <section class="chapter" id="bab3">
+      <h2 class="bab"><span class="no">Bab 3</span>Pencatatan Dana Masuk &amp; Keluar</h2>
+      <p>Pencatatan dilakukan secara kilat melalui tombol cepat <strong>+ Catat Masuk</strong> atau <strong>− Catat Keluar</strong> di beranda atau lewat tombol FAB (+) kanan bawah.</p>
+      
+      <ol class="steps">
+        <li><strong>Jumlah Uang:</strong> Masukkan angka rupiah (format otomatis bertitik).</li>
+        <li><strong>Tanggal &amp; Jam:</strong> Terisi otomatis waktu saat ini (dapat disesuaikan jika mencatat transaksi lampau).</li>
+        <li><strong>Sumber / Tujuan:</strong> Tuliskan nama pihak terkait (misal: <em>Bu Fatimah - Pembelian Madu Box</em>).</li>
+        <li><strong>Kategori &amp; Rekening:</strong> Pilih kategori transaksi dan rekening bank (BCA, DANA, OVO).</li>
+        <li><strong>Foto Bukti Transfer:</strong> Wajib dilampirkan jika nominal transaksi di atas Rp 1.000.000. Foto otomatis dikompres agar hemat penyimpanan.</li>
+        <li><strong>Toggle Kepemilikan:</strong> Default adalah <em>Dana Kopontren</em>. Geser ke <em>Pribadi</em> jika uang tersebut milik pribadi developer namun masuk ke rekening penampung.</li>
+      </ol>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu transaksi di atas Rp 1.000.000 mewajibkan upload foto bukti transfer.</span></label></li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu bahwa setiap simpan transaksi langsung dicatat dengan SHA-256 integrity hash.</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 4 -->
+    <section class="chapter" id="bab4">
+      <h2 class="bab"><span class="no">Bab 4</span>Rekonsiliasi Saldo Bank</h2>
+      <div class="summary">
+        Fitur ini memastikan saldo fisik di m-Banking Anda selalu seimbang dengan catatan di aplikasi Sekat Kas.
+      </div>
+      <p>Jika saldo tidak cocok, banner kuning <strong>Perlu Dicek</strong> akan otomatis muncul di beranda mengingatkan Anda untuk memeriksa mutasi yang terlewat.</p>
+      
+      <ol class="steps">
+        <li>Buka menu <strong>Lainnya</strong> → <strong>Rekonsiliasi Saldo Bank</strong>.</li>
+        <li>Pilih rekening yang ingin dicocokkan (misal: BCA).</li>
+        <li>Buka aplikasi m-Banking Anda, lihat saldo mutasi saat ini.</li>
+        <li>Ketikkan saldo m-Banking asli pada kotak input.</li>
+        <li>Aplikasi akan langsung menampilkan status <em>Cocok Sempurna</em> atau <em>Selisih Nominal</em>.</li>
+        <li>Tekan <strong>Tandai Sudah Dicek</strong> untuk menyimpan catatan audit.</li>
+      </ol>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu cara mencocokkan saldo m-banking dengan aplikasi secara berkala.</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 5 -->
+    <section class="chapter" id="bab5">
+      <h2 class="bab"><span class="no">Bab 5</span>Setor Massal &amp; Berita Acara Resmi</h2>
+      <p>Saat Anda hendak menyerahkan uang tunai atau mentransfer dana kumpul ke bendahara / admin Kopontren (Pak Kholiq), Anda tidak perlu mengubah status satu per satu.</p>
+      
+      <ol class="steps">
+        <li>Buka tab <strong>Laporan</strong>.</li>
+        <li>Lihat bagian <strong>Setor Dana ke Admin Kopontren</strong> di bagian bawah.</li>
+        <li>Tekan tombol hijau <strong>Setor Semua yang Siap Disetor</strong>.</li>
+        <li>Aplikasi akan menampilkan konfirmasi total rupiah dan jumlah transaksi.</li>
+        <li>Setelah disetujui, semua transaksi otomatis berubah status menjadi <em>Sudah Setor (Aman di Admin)</em>.</li>
+        <li>Aplikasi langsung meng-generate <strong>Berita Acara Resmi</strong> lengkap dengan stempel digital SHA-256 yang siap dikirim via WhatsApp.</li>
+      </ol>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya mengerti cara membuat Berita Acara Serah Terima dana secara otomatis.</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 6 -->
+    <section class="chapter" id="bab6">
+      <h2 class="bab"><span class="no">Bab 6</span>Laporan WhatsApp (Plain ASCII) &amp; CSV</h2>
+      <p>Format laporan WhatsApp didesain 100% menggunakan Plain ASCII bersih sehingga tidak berantakan di HP versi lama maupun baru.</p>
+
+      <div class="card">
+        <h3>Pilihan Pengiriman WhatsApp:</h3>
+        <ul class="steps">
+          <li><strong>WhatsApp Biasa:</strong> Membuka aplikasi WhatsApp reguler dengan teks pesan sudah terisi.</li>
+          <li><strong>WhatsApp Business:</strong> Membuka lewat Share Sheet sistem operasi.</li>
+          <li><strong>Salin Pesan (Copy):</strong> Menyalin teks laporan ke clipboard untuk ditempel bebas.</li>
+        </ul>
+      </div>
+
+      <p>Selain WA, tersedia tombol <strong>Unduh Laporan Format Excel / CSV</strong> untuk arsip spreadsheet pembukuan bulanan pengurus.</p>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu laporan bisa dikirim ke WA Biasa, WA Business, maupun dicopy manual.</span></label></li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu cara mengunduh laporan CSV untuk dibuka di Microsoft Excel / Google Sheets.</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 7 -->
+    <section class="chapter" id="bab7">
+      <h2 class="bab"><span class="no">Bab 7</span>Sinkronisasi Otomatis Google Sheets</h2>
+      <div class="summary">
+        Setiap kali Anda menekan <em>Simpan</em>, <em>Edit</em>, <em>Hapus</em>, <em>Cairkan</em>, atau <em>Setor</em>, aplikasi secara <strong>otomatis langsung mem-push data</strong> ke Google Sheets Anda tanpa perlu tombol sinkron manual.
+      </div>
+      <p>Jika kondisi offline, data otomatis disimpan ke antrean lokal (<em>Pending Queue</em>) dan dikirim kembali saat internet aktif.</p>
+
+      <div class="macet">
+        <div class="m-title">Langkah Pengaturan Spreadsheet Terpisah:</div>
+        <ul>
+          <li>Gunakan spreadsheet baru dengan tab <code>Sekat Kas Kopontren</code>.</li>
+          <li>Deploy Google Apps Script Web App dengan akses "Anyone".</li>
+          <li>Salin URL Web App dan Token ke menu <strong>Lainnya → Sinkronisasi Google Sheets</strong>.</li>
+        </ul>
+      </div>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya paham fungsi indikator: Hijau (Tersinkron), Kuning (Menyinkron), Oranye (Pending antrean).</span></label></li>
+      </ul>
+    </section>
+
+    <!-- BAB 8 -->
+    <section class="chapter" id="bab8">
+      <h2 class="bab"><span class="no">Bab 8</span>Migrasi ke Rekening Resmi Kopontren</h2>
+      <p>Ketika rekening bank resmi atas nama Kopontren Al Ittihad sudah selesai dibuat oleh pihak bank, peran rekening pribadi developer selesai.</p>
+      
+      <ol class="steps">
+        <li>Buka menu <strong>Lainnya</strong> → <strong>Migrasi ke Rekening Resmi</strong>.</li>
+        <li>Aplikasi akan menghitung total seluruh dana Kopontren yang ada di rekening Anda.</li>
+        <li>Tekan <strong>PROSES MIGRASI</strong>.</li>
+        <li>File <code>migrasi_kopontren_[tanggal].json</code> otomatis diunduh sebagai dokumen serah terima final.</li>
+        <li>Saldo dana Kopontren di aplikasi menjadi <strong>Rp 0</strong> dan seluruh data lama tetap tersimpan aman sebagai audit trail sejarah keuangan.</li>
+      </ol>
+
+      <ul class="checklist">
+        <li class="cl-title">Cek pemahaman Anda</li>
+        <li><label><input type="checkbox" class="chk"><span>Saya tahu langkah penutupan rekening penampung ketika rekening resmi Kopontren telah aktif.</span></label></li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<button id="toTop" aria-label="Kembali ke atas">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
+
+<footer>
+  <p><strong>Aplikasi:</strong> Sekat Kas Kopontren Al Ittihad</p>
+  <p>Pemisah dana · Penjaga amanah</p>
+  <button class="cetak-btn" onclick="window.print()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Cetak Panduan / Simpan PDF
+  </button>
+  <p class="f-ver">Versi Panduan: v1.0 — 29 September 2026</p>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var tbtn = document.getElementById('themeBtn');
+  var tlbl = document.getElementById('themeLbl');
+  function setTheme(dark){
+    if(dark){ root.setAttribute('data-theme','dark'); }
+    else{ root.removeAttribute('data-theme'); }
+    if(tlbl) tlbl.textContent = dark ? 'Mode Terang' : 'Mode Gelap';
+  }
+  try{
+    if(localStorage.getItem('sekatkas_theme')==='dark'){ setTheme(true); }
+  }catch(e){}
+  tbtn.addEventListener('click',function(){
+    var dark = root.getAttribute('data-theme')!=='dark';
+    setTheme(dark);
+    try{ localStorage.setItem('sekatkas_theme', dark?'dark':'light'); }catch(e){}
+  });
+
+  // Sidebar TOC
+  var toc = document.getElementById('toc');
+  var ov = document.getElementById('overlay');
+  var mb = document.getElementById('menuBtn');
+  var cl = document.getElementById('tocClose');
+  function openToc(){ toc.classList.add('open'); ov.classList.add('show'); document.body.style.overflow='hidden'; }
+  function closeToc(){ toc.classList.remove('open'); ov.classList.remove('show'); document.body.style.overflow=''; }
+  mb.addEventListener('click', openToc);
+  ov.addEventListener('click', closeToc);
+  cl.addEventListener('click', closeToc);
+  toc.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ if(window.innerWidth<900){ closeToc(); } });
+  });
+
+  // Scroll to top
+  var tt = document.getElementById('toTop');
+  window.addEventListener('scroll', function(){
+    tt.classList.toggle('show', window.scrollY > 400);
+  }, true);
+  tt.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+  // Checklist interaktif tersimpan
+  var KEY = 'sekatkas_guide_checks';
+  var saved = [];
+  try{ saved = JSON.parse(localStorage.getItem(KEY)) || []; }catch(e){}
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('.checklist input[type=checkbox]'));
+  boxes.forEach(function(b){
+    var label = b.closest('label');
+    var sp = label ? label.querySelector('span') : null;
+    b.dataset.key = sp ? sp.textContent.trim() : '';
+    if(b.dataset.key && saved.indexOf(b.dataset.key) > -1){ b.checked = true; }
+    if(b.checked){ var li = b.closest('li'); if(li){ li.classList.add('done'); } }
+  });
+  function persist(){
+    var cur = boxes.filter(function(b){ return b.checked; }).map(function(b){ return b.dataset.key; });
+    try{ localStorage.setItem(KEY, JSON.stringify(cur)); }catch(e){}
+  }
+  function progress(){
+    var total = boxes.length;
+    var done = boxes.filter(function(b){ return b.checked; }).length;
+    var pct = total ? Math.round(done/total*100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = 'Selesai ' + done + ' dari ' + total + ' langkah (' + pct + '%)';
+  }
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      var li = b.closest('li');
+      if(li){ li.classList.toggle('done', b.checked); }
+      persist();
+      progress();
+    });
+  });
+  progress();
+
+  // Sorot bab aktif
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var linkMap = {};
+  links.forEach(function(l){ linkMap[l.getAttribute('href').slice(1)] = l; });
+  var secs = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
+  function setAct(id){
+    links.forEach(function(l){ l.classList.remove('active'); });
+    var l = linkMap[id]; if(l){ l.classList.add('active'); }
+  }
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ setAct(e.target.id); }
+      });
+    },{rootMargin:'-30% 0px -60% 0px'});
+    secs.forEach(function(s){ io.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
