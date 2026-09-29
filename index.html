@@ -61,8 +61,8 @@
       --text-soft: #9CA3AF;
       
       /* Header & Gradient */
-      --header-bg: linear-gradient(135deg, #047857 0%, #059669 50%, #10B981 100%);
-      --hero-grad: linear-gradient(135deg, #047857 0%, #059669 55%, #10B981 100%);
+      --header-bg: linear-gradient(135deg, #047857 0%, #10B981 100%);
+      --hero-grad: linear-gradient(135deg, #047857 0%, #10B981 100%);
       
       /* Shadows */
       --shadow-xs: 0 1px 2px rgba(0,0,0,.04);
@@ -233,9 +233,14 @@
       background: #34D399;
     }
     .sync-badge[data-state="syncing"] .sync-dot {
-      background: #FBBF24;
-      animation: pulse 1s infinite;
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.9);
+      border-top-color: transparent;
+      width: 8px;
+      height: 8px;
+      animation: skSyncSpin 0.7s linear infinite;
     }
+    @keyframes skSyncSpin { to { transform: rotate(360deg); } }
     .sync-badge[data-state="pending"] .sync-dot { background: #F97316; }
     .sync-badge[data-state="failed"] .sync-dot { background: #EF4444; }
     .sync-badge[data-state="off"] .sync-dot { background: #9CA3AF; }
@@ -262,12 +267,16 @@
     .view-content {
       padding: 16px;
       display: none;
-      animation: fadeIn 0.22s var(--ease);
+      animation: skViewFadeIn 0.3s var(--ease);
     }
     .view-content.active { display: block; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+    @keyframes skViewFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     /* HERO CARD SALDO */
@@ -307,7 +316,7 @@
     }
     .hero-label {
       font-size: 0.68rem;
-      letter-spacing: 1.2px;
+      letter-spacing: 1.6px;
       text-transform: uppercase;
       opacity: 0.9;
       font-weight: 800;
@@ -320,7 +329,7 @@
     }
     .hero-amount {
       font-family: var(--font-num);
-      font-size: 2.15rem;
+      font-size: 2.3rem;
       font-weight: 900;
       letter-spacing: -1px;
       margin: 10px 0 6px;
@@ -389,22 +398,28 @@
       overflow: hidden;
       cursor: pointer;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
-      box-shadow: var(--shadow-xs);
+      box-shadow: var(--shadow-sm);
     }
     .status-mini:active { transform: scale(0.96); }
+    @media (hover: hover) {
+      .status-mini:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+      }
+    }
     .status-mini::before {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 3.5px;
+      height: 4px;
     }
     .status-mini.belum::before { background: var(--status-belum); }
     .status-mini.cair::before  { background: var(--status-cair); }
     .status-mini.setor::before { background: var(--status-setor); }
 
     .status-mini-icon {
-      width: 32px;
-      height: 32px;
+      width: 36px;
+      height: 36px;
       margin: 0 auto 6px;
       border-radius: 10px;
       display: flex;
@@ -462,7 +477,10 @@
       overflow: hidden;
       text-align: left;
     }
-    .quick-btn:active { transform: scale(0.96); }
+    .quick-btn:active { transform: scale(1.05); }
+    @media (hover: hover) {
+      .quick-btn:hover { transform: translateY(-2px); }
+    }
     .quick-btn.masuk {
       background: linear-gradient(135deg, #047857 0%, #059669 60%, #10B981 100%);
       box-shadow: 0 6px 16px rgba(5,150,105,0.28);
@@ -584,7 +602,13 @@
       cursor: pointer;
       position: relative;
       transition: all 0.15s ease;
-      box-shadow: var(--shadow-xs);
+      box-shadow: var(--shadow-sm);
+    }
+    @media (hover: hover) {
+      .trx-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+      }
     }
     .trx-card:active {
       transform: scale(0.985);
@@ -620,7 +644,7 @@
     }
     .trx-title {
       font-weight: 700;
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
@@ -638,13 +662,14 @@
     .trx-amount.keluar { color: #EA580C; }
     .trx-meta {
       font-size: 0.7rem;
-      color: var(--text-muted);
+      color: #4B5563;
       margin-top: 3px;
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
     }
+    [data-theme="dark"] .trx-meta { color: var(--text-muted); }
     .status-tag {
       display: inline-flex;
       align-items: center;
@@ -738,9 +763,9 @@
       cursor: pointer;
       transition: color 0.15s ease, transform 0.12s ease;
     }
-    .nav-tab:active { transform: scale(0.92); }
+    .nav-tab:active { transform: scale(1.05); }
     .nav-tab.active { color: var(--primary); }
-    .nav-tab svg { width: 22px; height: 22px; transition: transform 0.15s ease; }
+    .nav-tab svg { width: 24px; height: 24px; transition: transform 0.15s ease; }
     .nav-tab.active svg { transform: scale(1.1); stroke-width: 2.3; }
 
     /* FAB */
@@ -754,7 +779,7 @@
       background: linear-gradient(135deg, #047857 0%, #059669 50%, #10B981 100%);
       color: #FFFFFF;
       border: none;
-      box-shadow: 0 8px 24px rgba(5,150,105,0.4);
+      box-shadow: 0 16px 32px rgba(5,150,105,0.45), 0 6px 14px rgba(4,120,87,0.35);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -828,8 +853,9 @@
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.55);
-      backdrop-filter: blur(4px);
+      background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 60;
       display: flex;
       align-items: flex-end;
@@ -849,7 +875,7 @@
       overflow-y: auto;
       box-shadow: var(--shadow-xl);
       transform: translateY(100%);
-      transition: transform 0.25s var(--ease);
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
       display: flex;
       flex-direction: column;
     }
@@ -871,8 +897,8 @@
     .modal-title { font-size: 1.05rem; font-weight: 800; color: var(--text); }
     .modal-subtitle { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
     .modal-close-btn {
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       background: var(--surface-alt);
       border: 1px solid var(--border);
@@ -976,7 +1002,7 @@
       transition: all 0.12s ease;
       font-family: inherit;
     }
-    .btn:active { transform: scale(0.97); }
+    .btn:active { transform: scale(1.05); }
     .btn-primary {
       background: var(--primary);
       color: #FFFFFF;
@@ -992,6 +1018,21 @@
     .btn-cair { background: var(--status-cair); color: #FFFFFF; }
     .btn-setor { background: var(--status-setor); color: #FFFFFF; }
 
+    /* AKSESIBILITAS & FEEDBACK INTERAKSI */
+    button:focus-visible, .form-control:focus-visible, .tab-pill:focus-visible,
+    .filter-chip:focus-visible, .nav-tab:focus-visible, a:focus-visible,
+    .search-input:focus-visible, .setting-card:focus-visible {
+      outline: 3px solid rgba(59, 130, 246, 0.55);
+      outline-offset: 2px;
+    }
+    .empty-box .empty-action {
+      width: auto;
+      margin: 14px auto 0;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      display: inline-flex;
+    }
+
     /* TABS BAR */
     .tab-pills {
       display: flex;
@@ -1004,7 +1045,7 @@
     }
     .tab-pill {
       flex: 1;
-      padding: 7px 10px;
+      padding: 8px 16px;
       border-radius: var(--r-sm);
       border: none;
       background: transparent;
@@ -1050,7 +1091,7 @@
       margin-bottom: 12px;
     }
     .filter-chip {
-      padding: 5px 12px;
+      padding: 7px 14px;
       border-radius: var(--r-full);
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -1065,6 +1106,7 @@
       background: var(--primary);
       border-color: var(--primary);
       color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(5,150,105,0.35);
     }
 
     /* DETAIL TRANSACTION */
@@ -1289,7 +1331,8 @@
       body { background: #FFFFFF; color: #000000; }
       .top-header, .bottom-nav, .fab-btn, .fab-backdrop, .fab-menu, .modal, .toast-container { display: none !important; }
       #app { max-width: 100%; box-shadow: none; padding: 0; }
-      .view-content { display: block !important; padding: 0; }
+      .view-content { display: none !important; }
+      .view-content.active { display: block !important; padding: 0; }
       .ascii-box { max-height: none; border: none; }
     }
   </style>
@@ -1303,12 +1346,7 @@
     <header class="top-header">
       <div class="header-brand">
         <div class="brand-icon">
-          <!-- SVG BUKU & SEKAT EMAS -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-            <line x1="12" y1="2" x2="12" y2="22" stroke="#FEF3C7" stroke-width="2.5"/>
-          </svg>
+          <img src="./icon-192.png" alt="Logo Sekat Kas" style="width:100%;height:100%;object-fit:cover;border-radius:10px;">
         </div>
         <div class="brand-info">
           <div class="brand-title">Sekat Kas Kopontren</div>
@@ -1320,7 +1358,7 @@
           <span class="sync-dot"></span>
           <span class="sync-label" id="syncStatusLabel">Tersinkron</span>
         </div>
-        <button class="hdr-btn" onclick="skToggleTheme()" title="Ganti Tema">
+        <button class="hdr-btn" onclick="skToggleTheme()" title="Ganti Tema" aria-label="Ganti tema terang/gelap">
           <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
@@ -1362,7 +1400,7 @@
       <div class="status-row">
         <div class="status-mini belum" onclick="skGoToStatusTab('belum_cair')">
           <div class="status-mini-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <div class="status-mini-label">Menunggu Transfer</div>
           <div class="status-mini-value" id="valBelumCair">Rp 0</div>
@@ -1371,7 +1409,7 @@
 
         <div class="status-mini cair" onclick="skGoToStatusTab('sudah_cair')">
           <div class="status-mini-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <div class="status-mini-label">Siap Disetor</div>
           <div class="status-mini-value" id="valSudahCair">Rp 0</div>
@@ -1380,7 +1418,7 @@
 
         <div class="status-mini setor" onclick="skGoToStatusTab('sudah_setor')">
           <div class="status-mini-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
           <div class="status-mini-label">Aman di Admin</div>
           <div class="status-mini-value" id="valSudahSetor">Rp 0</div>
@@ -1519,7 +1557,7 @@
       <!-- PREVIEW REKAP PLAIN ASCII -->
       <div class="form-label" style="display:flex;justify-content:space-between;align-items:center;">
         <span>Format Pesan WhatsApp (Plain ASCII)</span>
-        <span style="font-size:0.68rem;color:var(--primary);cursor:pointer;" onclick="skSalinLaporanText()">Salin Teks</span>
+        <span id="salinTeksLabel" style="font-size:0.68rem;color:var(--primary);cursor:pointer;" onclick="skSalinLaporanText()">Salin Teks</span>
       </div>
       <div class="ascii-box" id="laporanAsciiPreview">Menyiapkan rekap...</div>
 
@@ -1751,7 +1789,7 @@
           <div class="modal-title" id="formModalTitle">Catat Dana Masuk</div>
           <div class="modal-subtitle" id="formModalSub">Masukkan rincian pergerakan rekening</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('formModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('formModal')" aria-label="Tutup">✕</button>
       </div>
 
       <form id="trxForm" onsubmit="skHandleFormSubmit(event)">
@@ -1842,7 +1880,7 @@
           <div class="modal-title">Rincian Transaksi</div>
           <div class="modal-subtitle" id="detailTrxId">ID: -</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('detailModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('detailModal')" aria-label="Tutup">✕</button>
       </div>
 
       <div class="detail-hero">
@@ -1875,7 +1913,7 @@
           <div class="modal-title">Rekonsiliasi Bank</div>
           <div class="modal-subtitle">Cocokkan saldo m-Banking asli dengan aplikasi</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('rekonModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('rekonModal')" aria-label="Tutup">✕</button>
       </div>
 
       <div class="rekon-box">
@@ -1910,7 +1948,7 @@
           <div class="modal-title">Sinkronisasi Google Sheets</div>
           <div class="modal-subtitle">Setup terpisah sheet "Sekat Kas Kopontren"</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('syncModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('syncModal')" aria-label="Tutup">✕</button>
       </div>
 
       <div class="form-group">
@@ -1956,7 +1994,7 @@
           <div class="modal-title">Kelola Kategori Transaksi</div>
           <div class="modal-subtitle">Tambah atau hapus kategori kustom</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('kategoriModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('kategoriModal')" aria-label="Tutup">✕</button>
       </div>
 
       <div class="form-row form-group">
@@ -1982,7 +2020,7 @@
           <div class="modal-title">Kelola Rekening Bank</div>
           <div class="modal-subtitle">Daftar bank &amp; dompet digital</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('rekeningModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('rekeningModal')" aria-label="Tutup">✕</button>
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:14px;">
@@ -2004,7 +2042,7 @@
           <div class="modal-title">Kirim via WhatsApp</div>
           <div class="modal-subtitle">Pilih aplikasi WhatsApp tujuan Anda</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('waModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('waModal')" aria-label="Tutup">✕</button>
       </div>
 
       <div class="wa-picker-grid">
@@ -2063,7 +2101,7 @@
           <div class="modal-title">Log Perubahan (Audit Trail)</div>
           <div class="modal-subtitle">500 aktivitas terakhir tersimpan otomatis</div>
         </div>
-        <button class="modal-close-btn" onclick="skTutupModal('auditModal')">✕</button>
+        <button class="modal-close-btn" onclick="skTutupModal('auditModal')" aria-label="Tutup">✕</button>
       </div>
       <div id="auditLogList" style="display:flex;flex-direction:column;gap:8px;max-height:380px;overflow-y:auto;font-size:0.75rem;"></div>
     </div>
@@ -2248,7 +2286,7 @@
     // 3. LOGIKA SALDO & KALKULASI REAL-TIME
     // =========================================================================
     function skCalcBalances() {
-      const data = skLoadData().filter(r => !r.deleted);
+      const data = skLoadData().filter(r => !r.deleted && !r.isMigrated);
       
       // Filter status
       const masukBelum = data.filter(r => r.jenis === 'masuk' && r.status === 'belum_cair' && r.isKopontren);
@@ -2336,10 +2374,11 @@
         listEl.innerHTML = `
           <div class="empty-box">
             <div class="empty-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="12" y1="2" x2="12" y2="22" opacity="0.45"/></svg>
             </div>
             <div class="empty-title">Belum ada catatan transaksi</div>
             <div class="empty-sub">Yuk catat pergerakan uang masuk atau keluar sekarang!</div>
+            <button class="btn btn-primary empty-action" onclick="skBukaFormMasuk()">+ Catat Transaksi Pertama</button>
           </div>`;
       } else {
         listEl.innerHTML = top5.map(t => skCreateTrxCardHTML(t)).join('');
@@ -2484,20 +2523,42 @@
       const listEl = document.getElementById('riwayatTrxList');
 
       if (!data.length) {
+        const adaData = skLoadData().filter(r => !r.deleted).length > 0;
         listEl.innerHTML = `
           <div class="empty-box">
+            <div class="empty-icon">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
             <div class="empty-title">Tidak ada transaksi yang cocok</div>
             <div class="empty-sub">Coba ubah kata kunci pencarian atau filter periode.</div>
+            ${adaData
+              ? '<button class="btn btn-secondary empty-action" onclick="skBersihkanFilterRiwayat()">Reset Filter &amp; Pencarian</button>'
+              : '<button class="btn btn-primary empty-action" onclick="skBukaFormMasuk()">+ Catat Transaksi Pertama</button>'}
           </div>`;
       } else {
         listEl.innerHTML = data.map(t => skCreateTrxCardHTML(t)).join('');
       }
     }
 
+    function skBersihkanFilterRiwayat() {
+      skHaptic(10);
+      _riwayatSearch = '';
+      _riwayatStatus = 'all';
+      _riwayatPeriod = 'semua';
+      const s = document.getElementById('riwayatSearchInput');
+      if (s) s.value = '';
+      document.querySelectorAll('#riwayatStatusTabs .tab-pill').forEach(b => b.classList.toggle('active', b.dataset.status === 'all'));
+      document.querySelectorAll('#riwayatPeriodFilters .filter-chip').forEach(b => b.classList.toggle('active', b.dataset.period === 'semua'));
+      const cda = document.getElementById('customDateRangeArea');
+      if (cda) cda.style.display = 'none';
+      skRenderRiwayat();
+    }
+
     // =========================================================================
     // 6. CATAT DANA MASUK / KELUAR
     // =========================================================================
     function skBukaFormMasuk() {
+      skHaptic(10);
       skResetForm('masuk');
       document.getElementById('formModalTitle').textContent = 'Catat Dana Masuk';
       document.getElementById('formSumberLabel').textContent = 'Sumber Dana (Dari Siapa)';
@@ -2507,6 +2568,7 @@
     }
 
     function skBukaFormKeluar() {
+      skHaptic(10);
       skResetForm('keluar');
       document.getElementById('formModalTitle').textContent = 'Catat Dana Keluar';
       document.getElementById('formSumberLabel').textContent = 'Tujuan Pembayaran (Kepada Siapa)';
@@ -2619,8 +2681,8 @@
         return;
       }
 
-      // Validasi wajib upload foto bukti kalau > 1.000.000
-      if (jumlah > 1000000 && !_tempFotoBase64 && !editId) {
+      // Validasi wajib upload foto bukti kalau > 1.000.000 (apakah baru maupun edit)
+      if (jumlah > 1000000 && !_tempFotoBase64) {
         skShowToast('Wajib melampirkan foto bukti transfer untuk nominal di atas Rp 1.000.000!', 'error');
         return;
       }
@@ -2880,6 +2942,7 @@
     }
 
     function skHapusCurrentDetail() {
+      skHaptic(30);
       const id = _currentDetailId;
       if (!id) return;
 
@@ -3108,7 +3171,7 @@
       document.getElementById('lapBelumCair').textContent = skFormatRupiah(rep.totBelum);
       document.getElementById('lapSudahCair').textContent = skFormatRupiah(rep.totCair);
       document.getElementById('lapSudahSetor').textContent = skFormatRupiah(rep.totSetor);
-      document.getElementById('laporanAsciiPreview').textContent = rep.text.replace(/\\n/g, '\n');
+      document.getElementById('laporanAsciiPreview').textContent = rep.text;
 
       const b = skCalcBalances();
       document.getElementById('setorMassalNominal').textContent = skFormatRupiah(b.totalCair);
@@ -3124,10 +3187,33 @@
 
     function skSalinLaporanText() {
       const text = document.getElementById('laporanAsciiPreview').textContent;
+      const label = document.getElementById('salinTeksLabel');
+      const markCopied = () => {
+        if (label) {
+          label.textContent = 'Tersalin!';
+          setTimeout(() => { label.textContent = 'Salin Teks'; }, 2000);
+        }
+      };
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text).then(() => {
-          skShowToast('Teks rekap laporan berhasil disalin ke clipboard', 'success');
+          skShowToast('Teks rekap laporan berhasil disalin', 'success');
+          markCopied();
+        }).catch(() => {
+          skShowToast('Gagal menyalin. Silakan salin manual.', 'error');
         });
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand('copy');
+          skShowToast('Teks rekap laporan berhasil disalin', 'success');
+          markCopied();
+        } catch (err) {
+          skShowToast('Gagal menyalin. Silakan salin manual.', 'error');
+        }
+        document.body.removeChild(textArea);
       }
     }
 
@@ -3261,8 +3347,8 @@
 
           skTanyaKonfirmasi({
             title: `Pulihkan ${records.length} Transaksi?`,
-            desc: 'Pilih apakah Anda ingin menggabungkan dengan data saat ini atau menimpa semua data.',
-            yesLabel: 'TIMPA SEMUA',
+            desc: 'PERINGATAN: Tindakan ini akan MENGHAPUS SEMUA data transaksi yang ada saat ini dan menggantinya dengan data dari file cadangan. Pastikan Anda sudah membuat backup terbaru. Lanjutkan?',
+            yesLabel: 'YA, TIMPA SEMUA DATA',
             danger: true,
             cb: () => {
               skSaveData(records, { action: 'restore_replace', id: 'RESTORE', before: null, after: { count: records.length } });
@@ -3579,7 +3665,11 @@
           const localMap = new Map(local.map(r => [r.id, r]));
 
           cloudMap.forEach((v, id) => {
-            if (!localMap.has(id)) {
+            const localRecord = localMap.get(id);
+            const cloudUpdatedAt = v.UpdatedAt ? Date.parse(v.UpdatedAt) : 0;
+
+            if (!localRecord || cloudUpdatedAt > (localRecord.updatedAt || 0)) {
+              // Timpa atau tambahkan data dari cloud
               localMap.set(id, {
                 id: v.ID,
                 tanggal: v.Tanggal,
@@ -3595,9 +3685,10 @@
                 tanggalCair: v.TanggalCair ? Date.parse(v.TanggalCair) : null,
                 tanggalSetor: v.TanggalSetor ? Date.parse(v.TanggalSetor) : null,
                 hashBeritaAcara: v.HashBeritaAcara || null,
-                updatedAt: v.UpdatedAt ? Date.parse(v.UpdatedAt) : Date.now(),
+                updatedAt: cloudUpdatedAt || Date.now(),
                 deleted: v.Deleted === true || v.Deleted === 'Ya',
-                hash: v.Hash || null
+                hash: v.Hash || null,
+                isMigrated: v.IsMigrated === true || v.IsMigrated === 'Ya' || v.IsMigrated === 'true'
               });
             }
           });
@@ -3659,6 +3750,7 @@
           allData.forEach(r => {
             if (r.isKopontren) {
               r.status = 'sudah_setor';
+              r.isMigrated = true;
               r.keterangan = (r.keterangan ? r.keterangan + ' ' : '') + `[Migrasi Resmi ${ds}]`;
             }
           });
