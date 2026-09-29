@@ -121,8 +121,8 @@
       --text-muted: #94A3B8;
       --text-soft: #64748B;
       
-      --header-bg: linear-gradient(135deg, #064E3B 0%, #065F46 50%, #047857 100%);
-      --hero-grad: linear-gradient(135deg, #064E3B 0%, #047857 60%, #059669 100%);
+      --header-bg: linear-gradient(135deg, #064E3B 0%, #065F46 100%);
+      --hero-grad: linear-gradient(135deg, #064E3B 0%, #047857 100%);
       --shadow-xs: 0 1px 2px rgba(0,0,0,.25);
       --shadow-sm: 0 2px 4px rgba(0,0,0,.35);
       --shadow-md: 0 4px 8px rgba(0,0,0,.45);
@@ -789,6 +789,56 @@
     }
     .fab-btn:active { transform: scale(0.9); }
     @media (max-width: 540px) { .fab-btn { right: 18px; } }
+
+    /* DARK MODE REFINEMENTS — premium, eye-friendly dark palette */
+    [data-theme="dark"] .quick-btn.masuk {
+      background: #064E3B;
+      border: 1px solid #047857;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    [data-theme="dark"] .quick-btn.keluar {
+      background: #7C2D12;
+      border: 1px solid #9A3412;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    [data-theme="dark"] .quick-icon-box {
+      background: rgba(255,255,255,0.1);
+    }
+
+    [data-theme="dark"] .cond-banner.warning {
+      background: #422006;
+      border: 1px solid #78350F;
+      color: #FDE68A;
+    }
+    [data-theme="dark"] .cond-banner.danger {
+      background: #450A0A;
+      border: 1px solid #7F1D1D;
+      color: #FECACA;
+    }
+    [data-theme="dark"] .cond-banner.info {
+      background: #082F49;
+      border: 1px solid #0C4A6E;
+      color: #BAE6FD;
+    }
+    [data-theme="dark"] .cond-banner .banner-btn {
+      background: #FFFFFF;
+      color: #1F2937;
+      border-color: rgba(0,0,0,0.08);
+    }
+
+    [data-theme="dark"] .status-mini {
+      background: #1E293B;
+      border: 1px solid #334155;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+    }
+    [data-theme="dark"] .status-mini:hover {
+      background: #243248;
+    }
+
+    [data-theme="dark"] .fab-btn {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
 
     /* FAB MENU */
     .fab-backdrop {
