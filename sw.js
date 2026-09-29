@@ -1,6 +1,6 @@
 // Service Worker Offline Cache kangge Sekat Kas Kopontren
-// Versi cache sekatkas-v1
-const CACHE_NAME = 'sekatkas-v1';
+// Versi cache sekatkas-v6 (di-bump: 4 bug fix + backend Code.gs + dokumentasi)
+const CACHE_NAME = 'sekatkas-v6';
 const ASSETS = [
   './',
   './index.html',
@@ -57,7 +57,9 @@ self.addEventListener('fetch', (e) => {
           caches.open(CACHE_NAME).then((c) => c.put(e.request, copy));
           return res;
         })
-        .catch(() => caches.match('./index.html'))
+        // Offline: coba cache asset yang diminta (mis. PANDUAN-SEKAT-KAS.html),
+        // baru fallback ke index.html
+        .catch(async () => (await caches.match(e.request)) || (await caches.match('./index.html')) || new Response('', { status: 503, statusText: 'Offline' }))
     );
     return;
   }
@@ -65,7 +67,9 @@ self.addEventListener('fetch', (e) => {
   // Cache-first kanggo gambar & asset statis
   e.respondWith(
     caches.match(e.request).then((res) => {
-      return res || fetch(e.request).catch(() => caches.match('./index.html'));
+      // Aset tidak ditemukan & offline: kembalikan null (bukan HTML) agar
+      // gambar/aset tampil "broken" wajar, bukan isian index.html
+      return res || fetch(e.request).catch(() => null);
     })
   );
 });

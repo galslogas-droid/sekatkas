@@ -1,0 +1,27 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log
+*.log
+npm-debug.log*
+
+# Temporary
+tmp-*
+*.tmp
+_check.txt
+_tmp_check.js
+_syntax_check.js
+
+# Environment
+.env
+.env.local
+
+# Node (jika ada)
+node_modules/
