@@ -1,7 +1,9 @@
 // Service Worker Offline Cache kangge Sekat Kas Kopontren
-// Versi cache sekatkas-v7 (di-bump: audit fix — guard kategori internal, paksa-logout user aktif,
-// sanitasi role, prioritas toast + tombol "Coba Lagi", guard grafik, tunda banner update, dsb.)
-const CACHE_NAME = 'sekatkas-v7';
+// Versi cache sekatkas-v8 (di-bump: v1.3 — back-navigation Android: tombol
+// kembali/swipe balik ke halaman sebelumnya, bukan keluar aplikasi; modal &
+// menu FAB dapat entri history otomatis; state kosong Laporan + petunjuk
+// "Lihat Semua Catatan".)
+const CACHE_NAME = 'sekatkas-v8';
 const ASSETS = [
   './',
   './index.html',

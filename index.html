@@ -1943,6 +1943,16 @@
         </div>
       </div>
 
+      <!-- v1.3: state kosong — muncul saat tidak ada transaksi di periode terpilih -->
+      <div id="laporanEmptyHint" style="display:none;margin-bottom:14px;background:var(--gold-light);border:1px solid rgba(200,155,60,.4);border-radius:var(--r-lg);padding:12px 14px;">
+        <div style="font-size:0.8rem;font-weight:800;color:var(--gold-dark);">📭 Tidak ada transaksi di periode ini</div>
+        <p id="lapEmptyDetail" style="font-size:0.72rem;color:var(--text-muted);margin:4px 0 8px;line-height:1.45;"></p>
+        <button class="btn btn-secondary" style="width:100%;"
+          onclick="document.getElementById('laporanPeriodSelect').value='semua';skRenderLaporan();">
+          Lihat Semua Catatan
+        </button>
+      </div>
+
       <!-- PREVIEW REKAP PLAIN ASCII -->
       <div class="form-label" style="display:flex;justify-content:space-between;align-items:center;">
         <span>Format Pesan WhatsApp (Plain ASCII)</span>
@@ -3147,7 +3157,7 @@
     const QUICK_NOTES_KEY   = 'sekatkas_quick_notes';// F2: catatan cepat [ {id,text,ts,done} ]
     const KURS_KEY_PREFIX   = 'sekatkas_kurs_';       // F8: kurs terakhir per mata uang
     const KURS_DEFAULT_MAP  = { IDR: 1, USD: 15600, SGD: 11600, MYR: 3350, SAR: 4150 }; // F8
-    const APP_VERSION       = '1.2.0';
+    const APP_VERSION       = '1.3.0';
 
     // State Variables
     let _records = [];
@@ -3164,6 +3174,10 @@
     let _cfmCallback = null;
     let _cfmTypeText = '';
     let _syncing = false;
+    // BACK NAV (v1.3): tombol kembali Android/browser harus ke halaman
+    // sebelumnya, bukan keluar aplikasi (PWA standalone).
+    let _skViewStack = [];      // halaman-halaman sebelumnya (home → riwayat → …)
+    let _skSuppressPop = false; // flag utk history.back() programatik saat modal ditutup in-app
 
     // Default Categories
     const DEFAULT_CATS_MASUK = ['Penjualan Kopontren', 'Setoran Pengurus', 'Komisi Supplier', 'Bunga Bank', 'Pelunasan Hutang', 'Penyesuaian Rekonsiliasi', 'Lain-lain'];
@@ -4399,8 +4413,31 @@
         text: msg,
         totBelum,
         totCair,
-        totSetor
+        totSetor,
+        trxCount: filtered.length,
+        periodLabel: periodLabel
       };
+    }
+
+    // v1.3: state kosong utk rekap — ketika periode terpilih tidak punya
+    // transaksi, tampilkan petunjuk jelas (bukan hanya angka nol).
+    function skRenderLaporanEmptyState(rep) {
+      const hint = document.getElementById('laporanEmptyHint');
+      if (!hint) return;
+      if (rep.trxCount > 0) { hint.style.display = 'none'; return; }
+      const all = skLoadData().filter(r => !r.deleted && r.isKopontren && !r.isMigrated);
+      const netAll = all.reduce((s, r) => s + (r.jenis === 'masuk' ? r.jumlah : -r.jumlah), 0);
+      const detail = document.getElementById('lapEmptyDetail');
+      if (all.length) {
+        detail.textContent =
+          all.length + ' transaksi Kopontren tercatat di periode lain (netto ' +
+          skFormatRupiah(netAll) +
+          '). Periode "' + rep.periodLabel + '" belum ada transaksinya — mungkin tanggal catatannya di bulan/periode lain.';
+      } else {
+        detail.textContent =
+          'Belum ada transaksi Kopontren yang tercatat. Catat dulu dana masuk/keluar di halaman Beranda.';
+      }
+      hint.style.display = 'block';
     }
 
     function skRenderLaporan() {
@@ -4414,6 +4451,7 @@
       document.getElementById('setorMassalNominal').textContent = skFormatRupiah(b.totalCair);
       skRenderLaporanKategori();
       skRenderStatistik();
+      skRenderLaporanEmptyState(rep);
     }
 
     function skBukaWaPicker(type) {
@@ -4547,7 +4585,8 @@
         .sort((a, b) => (Math.abs(b.net) - Math.abs(a.net)) || a.k.localeCompare(b.k));
 
       if (!rows.length) {
-        listEl.innerHTML = '<div style="text-align:center;padding:16px 0;font-size:0.78rem;color:var(--text-muted);">Tidak ada transaksi pada periode ini.</div>';
+        listEl.innerHTML = '<div style="text-align:center;padding:16px 0 8px;font-size:0.78rem;color:var(--text-muted);">Tidak ada transaksi pada periode ini.</div>'
+          + '<div style="text-align:center;padding:0 0 10px;"><button class="btn btn-secondary" style="width:100%;" onclick="skSetLaporanKategoriPeriod(\'semua\')">Lihat Semua Catatan</button></div>';
         detailEl.innerHTML = '';
         _lkOpenCat = null;
         return;
@@ -5258,7 +5297,7 @@
     }
 
     function skCloseDupModal() {
-      document.getElementById('dupModal').classList.remove('show');
+      skTutupModal('dupModal'); // lewat skTutupModal agar entri history-nya ikut terkonsumsi
     }
 
     function skHapusDuplikat(id) {
@@ -5814,6 +5853,17 @@
     // 16. UI HELPERS, MODAL NAVIGATION & THEMES
     // =========================================================================
     function skSwitchNav(tab) {
+      // Tombol nav di halaman yang sama: cukup refresh, TIDAK menambah entri
+      // history (supaya tombol kembali tidak "sengak" saat user ngapak-ulangi tab).
+      if (tab === _currentView) { skSetView(tab); return; }
+      // BACK NAV: simpan halaman saat ini ke stack + tambah entri history
+      // supaya tombol kembali Android (swipe/klik) balik ke halaman sebelumnya.
+      _skViewStack.push(_currentView);
+      try { history.pushState({ skView: tab }, ''); } catch (e) { /* file:// tanpa history → degrade wajar */ }
+      skSetView(tab);
+    }
+
+    function skSetView(tab) {
       _currentView = tab;
       document.querySelectorAll('.view-content').forEach(v => v.classList.remove('active'));
       document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
@@ -5834,6 +5884,67 @@
         document.getElementById('viewPengaturan').classList.add('active');
         document.getElementById('tabPengaturan').classList.add('active');
       }
+    }
+
+    // =========================================================================
+    // 16B. BACK NAVIGATION — tombol kembali sistem Android (swipe/klik)
+    // ------------------------------------------------------------------
+    // App ini satu halaman (PWA): ganti view tidak mengubah URL, sehingga
+    // tanpa entri history tombol kembali Android langsung MENUTUP aplikasi.
+    // Perbaikannya:
+    //   1. Ganti halaman (skSwitchNav) → history.pushState (entri baru).
+    //   2. Modal & menu FAB otomatis dapat entri saat dibuka (MutationObserver)
+    //      — jadi back saat form terbuka = form tertutup, bukan halaman pindah.
+    //   3. Handler popstate: tutup modal teratas → ke halaman sebelumnya →
+    //      kalau sudah di Beranda dan tidak ada overlay: back menutup app
+    //      (perilaku wajar, hanya kalau memang tidak ada halaman sebelumnya).
+    // =========================================================================
+    function skInitOverlayNav() {
+      if (window._skOverlayNavInit) return;
+      window._skOverlayNavInit = true;
+      try {
+        const obs = new MutationObserver(muts => {
+          muts.forEach(m => {
+            const el = m.target;
+            if (!el || el.nodeType !== 1 || !el.classList) return;
+            if (el.id === 'pinModal') return; // PIN lock: JANGAN bisa ditutup via back (keamanan)
+            if (!el.classList.contains('modal') && !el.classList.contains('fab-menu')) return;
+            if (el.classList.contains('show') && el.dataset.skHist !== '1') {
+              el.dataset.skHist = '1';
+              try { history.pushState({ skOverlay: el.id || 'overlay' }, ''); }
+              catch (e) { el.dataset.skHist = ''; }
+            } else if (!el.classList.contains('show') && el.dataset.skHist === '1') {
+              el.dataset.skHist = '';
+            }
+          });
+        });
+        obs.observe(document.body, { subtree: true, attributes: true, attributeFilter: ['class'] });
+      } catch (e) { /* observer tidak tersedia → back nav tetap jalan untuk pindah halaman */ }
+    }
+
+    function skHandlePopState() {
+      if (_skSuppressPop) { _skSuppressPop = false; return; } // back() dari skTutupModal/skCloseFabMenu
+      // 1) Ada modal terbuka → cukup tutup modal teratas (entri-nya baru saja di-pop)
+      const modals = document.querySelectorAll('.modal.show');
+      if (modals.length) {
+        modals[modals.length - 1].classList.remove('show');
+        return;
+      }
+      // 2) Menu FAB terbuka → tutup
+      const fab = document.getElementById('fabMenu');
+      if (fab && fab.classList.contains('show')) {
+        fab.classList.remove('show');
+        const bd = document.getElementById('fabBackdrop');
+        if (bd) bd.classList.remove('show');
+        return;
+      }
+      // 3) Pulang ke halaman sebelumnya
+      if (_skViewStack.length) {
+        skSetView(_skViewStack.pop());
+        window.scrollTo(0, 0);
+        return;
+      }
+      // 4) Sudah di Beranda & tidak ada overlay → back menutup aplikasi (wajar)
     }
 
     function skSetTypeFilter(type) {
@@ -5893,12 +6004,32 @@
     }
 
     function skCloseFabMenu() {
-      document.getElementById('fabMenu').classList.remove('show');
+      const menu = document.getElementById('fabMenu');
+      const wasShown = menu.classList.contains('show');
+      const hadEntry = menu.dataset.skHist === '1';
+      menu.classList.remove('show');
       document.getElementById('fabBackdrop').classList.remove('show');
+      // BACK NAV: konsumsi entri history yang didorong saat menu dibuka,
+      // agar keseimbangan back tetap benar.
+      if (wasShown && hadEntry) {
+        _skSuppressPop = true;
+        try { history.back(); } catch (e) { _skSuppressPop = false; }
+      }
     }
 
     function skTutupModal(id) {
-      document.getElementById(id).classList.remove('show');
+      const el = document.getElementById(id);
+      if (!el) return;
+      const wasShown = el.classList.contains('show');
+      const hadEntry = el.dataset.skHist === '1';
+      el.classList.remove('show');
+      // BACK NAV: kalau modal tadi menambah entri history saat dibuka,
+      // konsumsi entri itu supaya tombol kembali tetap seimbang
+      // (tidak mempop halaman yang seharusnya tidak dipop).
+      if (wasShown && hadEntry) {
+        _skSuppressPop = true;
+        try { history.back(); } catch (e) { _skSuppressPop = false; }
+      }
     }
 
     function skTanyaKonfirmasi(opts) {
@@ -8033,6 +8164,11 @@
 
     // Service Worker Registration — dipanggil saat DOM siap
     window.addEventListener('DOMContentLoaded', skRegisterServiceWorker);
+
+    // BACK NAV (v1.3): observer entri history utk modal/FAB + handler tombol
+    // kembali sistem Android. Lihat dokumentasi di seksi 16B.
+    window.addEventListener('DOMContentLoaded', skInitOverlayNav);
+    window.addEventListener('popstate', skHandlePopState);
 
     window.addEventListener('DOMContentLoaded', skInit);
   </script>
