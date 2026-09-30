@@ -1,6 +1,7 @@
 // Service Worker Offline Cache kangge Sekat Kas Kopontren
-// Versi cache sekatkas-v6 (di-bump: 4 bug fix + backend Code.gs + dokumentasi)
-const CACHE_NAME = 'sekatkas-v6';
+// Versi cache sekatkas-v7 (di-bump: audit fix — guard kategori internal, paksa-logout user aktif,
+// sanitasi role, prioritas toast + tombol "Coba Lagi", guard grafik, tunda banner update, dsb.)
+const CACHE_NAME = 'sekatkas-v7';
 const ASSETS = [
   './',
   './index.html',
